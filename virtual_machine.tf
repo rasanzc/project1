@@ -13,8 +13,7 @@ resource "azurerm_linux_virtual_machine" "my_vm_votes" {
   location              = var.location
   resource_group_name   = azurerm_resource_group.my_rg.name
   network_interface_ids = [
-    azurerm_network_interface.nic_votes.id,
-    azurerm_network_interface.nic_votes_priv.id
+    azurerm_network_interface.nic_votes.id
   ]
   size                  = var.vm_size
 
@@ -50,8 +49,7 @@ resource "azurerm_linux_virtual_machine" "my_vm_result" {
   location              = var.location
   resource_group_name   = azurerm_resource_group.my_rg.name
   network_interface_ids = [
-    azurerm_network_interface.nic_result.id,
-    azurerm_network_interface.nic_result_priv.id
+    azurerm_network_interface.nic_result.id
   ]
   size                  = var.vm_size
 

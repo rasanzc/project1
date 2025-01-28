@@ -3,7 +3,8 @@ resource "azurerm_public_ip" "app_gateway_pip" {
   name                = "app-gateway-ip"
   location            = var.location
   resource_group_name = azurerm_resource_group.my_rg.name
-  allocation_method   = "Dynamic"
+  allocation_method   = "Static"
+  sku = "Standard"
 }
 
 # Application Gateway
@@ -34,18 +35,16 @@ resource "azurerm_application_gateway" "app_gateway" {
 
   backend_address_pool {
     name = "backend-pool"
-    fqdns = [azurerm_linux_virtual_machine.my_vm_result.private_ip_address]
   }
 
   backend_address_pool {
     name = "frontend-pool"
-    fqdns = [azurerm_linux_virtual_machine.my_vm_vote.private_ip_address]
   }
 
   http_listener {
     name                           = "http-listener"
     frontend_ip_configuration_name = "app-gateway-frontend-ip"
-    frontend_port_name             = "http"
+    frontend_port_name             = "http-port"
     protocol                       = "Http"
   }
 
@@ -53,18 +52,8 @@ resource "azurerm_application_gateway" "app_gateway" {
     name                       = "frontend-rule"
     rule_type                  = "PathBasedRouting"
     http_listener_name         = "http-listener"
-    backend_address_pool_name  = "frontend-pool"
-    backend_http_settings_name = "http-setting"
-    url_path_map_name          = "path-based-routing"
-  }
-
-  request_routing_rule {
-    name                       = "backend-rule"
-    rule_type                  = "PathBasedRouting"
-    http_listener_name         = "http-listener"
-    backend_address_pool_name  = "backend-pool"
-    backend_http_settings_name = "http-setting"
-    url_path_map_name          = "path-based-routing"
+    url_path_map_name          = "url-path-map"
+    priority                   = 9
   }
 
   url_path_map {
@@ -87,8 +76,9 @@ resource "azurerm_application_gateway" "app_gateway" {
     }
   }
 
+
   backend_http_settings {
-    name                  = "http-setting"
+    name                  = "http-settings"
     cookie_based_affinity = "Disabled"
     port                  = 80
     protocol              = "Http"
