@@ -14,6 +14,10 @@ subnets = {
   private_subnet = {
     cidr_block = "10.0.2.0/24"
   }
+
+  application_subnet_gateway = {
+    cidr_block = "10.0.3.0/24"
+  }
 }
 
 #tamaño disco máquina
