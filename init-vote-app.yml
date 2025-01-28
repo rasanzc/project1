@@ -1,0 +1,129 @@
+- name: Configurar hosts en Azure con Docker y contendores
+  hosts: all
+  become: yes
+  tasks:
+    - name: Instalar dependencias necesarias
+      apt:
+        name:
+          - apt-transport-https
+          - ca-certificates
+          - curl
+          - software-properties-common
+        update_cache: yes
+
+    - name: Agragar la clave GPG de Docker
+      apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
+
+    - name: Agregar repositorio de Docker
+      apt_repository:
+        repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable
+        state: present
+
+    - name: Instalar Docker
+      apt:
+        name: docker-ce
+        update_cache: yes
+        state: present
+
+    - name: Habilitar e iniciar el servicio Docker
+      service:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: Agregar el usuario actual al grupo Docker
+      user:
+        name: "{{ ansible_user }}"
+        groups: docker
+        append: yes
+
+- name: Crear red frontend
+  hosts: frontend
+  become: yes
+  tasks:
+    - name: Crear red frontend si no existe
+      docker_network:
+        name: frontend
+        state: present
+
+- name: Crear red de backend
+  hosts: backend
+  become: yes
+  tasks:
+    - name: Crear red backend si no existe
+      docker_network:
+        name: backend
+        state: present
+
+- name: Iniciar contenedor de vote
+  hosts: vote
+  become: yes
+  tasks:
+    - name: Ejecutar contenedor de vote
+      docker_container:
+        name: vote
+        image: mrantequera/vote
+        ports:
+          - "80:80"
+        networks:
+          - name: frontend
+        state: started
+
+- name: Iniciar contenedor de result
+  hosts: result
+  become: yes
+  tasks:
+    - name: Ejecutar contenedor de result
+      docker_container:
+        name: result
+        image: mrantequera/result
+        ports:
+          - "80:80"
+        networks:
+          - name: backend
+        state: started
+
+- name: Iniciar contenedores de db
+  hosts: db
+  become: yes
+  tasks:
+    - name: Ejecutar contenedor de worker
+      docker_container:
+        name: worker
+        image: mrantequera/worker
+        networks:
+          - name: backend
+          - name: frontend
+        state: started
+
+    - name: Ejecutar contenedor de postgres
+      docker_container:
+        name: db
+        image: postgres:latest
+        networks:
+          - name: backend
+        environment:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: db
+        state: started
+
+    - name: Ejecutar contenedor de redis
+      docker_container:
+        name: redis
+        image: redis:latest
+        networks:
+          - name: frontend
+        state: started
+
+
+
+
+
+
+  
+
+
+

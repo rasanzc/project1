@@ -1,0 +1,11 @@
+vote    ansible_host=40.118.18.31 ansible_connection=ssh ansible_ssh_user=azureuser ansible_ssh_pass="{{ vote_ansible_password }}"
+result  ansible_host=40.115.42.39 ansible_connection=ssh ansible_ssh_user=azureuser ansible_ssh_pass="{{ vote_ansible_password }}"
+db      ansible_host=13.73.147.59 ansible_connection=ssh ansible_ssh_user=azureuser ansible_ssh_pass="{{ vote_ansible_password }}"
+
+[backend]
+result
+db
+
+[frontend]
+vote
+db
