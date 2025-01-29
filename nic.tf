@@ -6,6 +6,7 @@ resource "azurerm_network_interface" "nic_votes" {
     name                          = "ipconfig1"
     subnet_id                     = azurerm_subnet.subnet["public_subnet"].id
     private_ip_address_allocation = "Dynamic"
+    public_ip_address_id          = azurerm_public_ip.votes_pip.id
   }
 }
 
@@ -24,6 +25,7 @@ resource "azurerm_network_interface" "nic_result" {
     name                          = "ipconfig1"
     subnet_id                     = azurerm_subnet.subnet["public_subnet"].id
     private_ip_address_allocation = "Dynamic"
+    public_ip_address_id          = azurerm_public_ip.result_pip.id
   }
 }
 
@@ -42,6 +44,7 @@ resource "azurerm_network_interface" "nic_db" {
     name                          = "ipconfig1"
     subnet_id                     = azurerm_subnet.subnet["private_subnet"].id
     private_ip_address_allocation = "Dynamic"
+    public_ip_address_id          = azurerm_public_ip.db_pip.id
   }
 }
 
