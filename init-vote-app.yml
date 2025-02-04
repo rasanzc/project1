@@ -113,6 +113,8 @@
         image: postgres:latest
         networks:
           - name: backend
+        ports:
+          - "5432:5432"
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
@@ -123,6 +125,8 @@
       docker_container:
         name: redis
         image: redis:latest
+        ports:
+          - "6379:6379"
         networks:
           - name: frontend
         state: started
