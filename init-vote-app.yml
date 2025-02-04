@@ -2,6 +2,9 @@
   hosts: all
   become: yes
   tasks:
+    - name: Update apt
+      apt:
+        update_cache: yes
     - name: Instalar dependencias necesarias
       apt:
         name:
@@ -65,6 +68,9 @@
       docker_container:
         name: vote
         image: mrantequera/vote
+        env:
+          REDIS_HOST: 10.0.2.4
+          REDIS_PORT: "6379"
         ports:
           - "80:80"
         networks:
@@ -79,6 +85,9 @@
       docker_container:
         name: result
         image: mrantequera/result
+        env:
+         POSTGRES_HOST: 10.0.2.4
+         POSTGRES_PORT: "5432"
         ports:
           - "80:80"
         networks:
@@ -104,7 +113,7 @@
         image: postgres:latest
         networks:
           - name: backend
-        environment:
+        env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
           POSTGRES_DB: db

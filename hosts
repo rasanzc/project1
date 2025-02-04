@@ -1,6 +1,6 @@
-vote    ansible_host=40.118.18.31 ansible_connection=ssh ansible_ssh_user=azureuser ansible_ssh_pass="{{ vote_ansible_password }}"
-result  ansible_host=40.115.42.39 ansible_connection=ssh ansible_ssh_user=azureuser ansible_ssh_pass="{{ vote_ansible_password }}"
-db      ansible_host=13.73.147.59 ansible_connection=ssh ansible_ssh_user=azureuser ansible_ssh_pass="{{ vote_ansible_password }}"
+vote    ansible_host=13.80.52.163 ansible_connection=ssh ansible_ssh_user=azureuser ansible_ssh_private_key_file=/home/marcos/ansible_ssh_private_key_file
+result  ansible_host=13.93.45.59 ansible_connection=ssh ansible_ssh_user=azureuser ansible_ssh_private_key_file=/home/marcos/ansible_ssh_private_key_file
+db      ansible_host=13.80.52.88 ansible_connection=ssh ansible_ssh_user=azureuser ansible_ssh_private_key_file=/home/marcos/ansible_ssh_private_key_file
 
 [backend]
 result
